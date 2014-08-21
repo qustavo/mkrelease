@@ -1,0 +1,37 @@
+#!/bin/bash
+
+function help() {
+	printf "Usage %s [-n number of releases] TARGET\n" $0
+	exit
+}
+
+function cleanup() {
+	_keep=$(($2 + 3))
+	for i in $(ls -Alt $1|sed -n $_keep',$p'|awk '{print $9}'); do
+		rm -rf $1/$i;
+	done
+}
+
+KEEP=5
+while getopts 'hk:' flag; do
+	case $flag in
+		h)
+			help
+			;;
+		k)
+			KEEP=$OPTARG
+			;;
+	esac
+done
+shift $(($OPTIND - 1))
+TARGET=$1
+
+if test -z $TARGET; then
+	help
+fi
+
+NOW=$(date +'%Y-%m-%d-%H:%M:%S')
+CURRENT=$TARGET/$NOW
+mkdir -p $CURRENT
+cleanup $TARGET $KEEP
+ln -fs $NOW $TARGET/current

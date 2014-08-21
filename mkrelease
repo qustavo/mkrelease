@@ -30,8 +30,8 @@ if test -z $TARGET; then
 	help
 fi
 
-NOW=$(date +'%Y-%m-%d-%H:%M:%S')
+NOW=$(date +'%Y%m%d%H%M%S')
 CURRENT=$TARGET/$NOW
 mkdir -p $CURRENT
+ln -sfn $NOW $TARGET/current
 cleanup $TARGET $KEEP
-ln -fs $NOW $TARGET/current
